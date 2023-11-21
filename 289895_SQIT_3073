@@ -1,0 +1,96 @@
+class LoanCalculator:
+    def __init__(self):
+        self.loans = []
+
+    def calculate_monthly_installment(self, principal, annual_interest_rate, loan_term):
+        #Convert interest rate to monthly rate
+        monthly_interest_rate = annual_interest_rate / 12 / 100
+        num_payments = loan_term * 12
+        monthly_payment = (principal * monthly_interest_rate) / (1 - (1 + monthly_interest_rate) ** -num_payments)
+        return monthly_payment
+
+    def calculate_total_payment_over_loan_term(self, monthly_installment, loan_term):
+        return monthly_installment * loan_term * 12
+
+    def calculate_debt_service_ratio(self, monthly_income, monthly_commitments):
+        total_commitments = sum(monthly_commitments)
+        debt_service_ratio = (total_commitments / monthly_income) * 100
+        return debt_service_ratio
+
+    def display_loan_details(self, principal, annual_interest_rate, loan_term, monthly_income, monthly_commitments):
+        monthly_payment = self.calculate_monthly_installment(principal, annual_interest_rate, loan_term)
+        total_payment = self.calculate_total_payment(monthly_payment, loan_term)
+        debt_service_ratio = self.calculate_debt_service_ratio(monthly_income, monthly_commitments)
+        
+
+        print("\nLoan Details:")
+        print(f"Principal Loan Amount: RM{principal}")
+        print(f"Annual Interest Rate: {annual_interest_rate}%")
+        print(f"Loan Term: {loan_term} years")
+        print(f"Monthly Income: RM{monthly_income}")
+        print(f"Monthly Installment: RM{monthly_payment:.2f}")
+        print(f"Total Payment: RM{total_payment:.2f}")
+        print(f"Debt Service Ratio (DSR): {debt_service_ratio:.2f}%")
+
+        if debt_service_ratio <= 70:
+            print("Congratulations! You are eligible for the loan. Which house are you interested in?")
+        else:
+            print("Sorry, you are not eligible for the loan based on your Debt Service Ratio. All the best!")
+
+        self.loans.append({
+            "Principal": principal,
+            "Interest Rate": annual_interest_rate,
+            "Loan Term": loan_term,
+            "Monthly Income": monthly_income,
+            "Monthly Installment": monthly_payment,
+            "Total Payment": total_payment,
+            "Debt Service Ratio": debt_service_ratio,
+        })
+
+    def display_previous_loans(self):
+        if not self.loans:
+            print("No previous loan calculations.")
+        else:
+            print("\nPrevious Loan Calculations:")
+            for index, loan in enumerate(self.loans, start=1):
+                print(f"\nCalculation {index}:")
+                for key, value in loan.items():
+                    print(f"{key}: {value}")
+
+    def run(self):
+        while True:
+            print("Hello! Welcome to Housing Loan Eligibility and DSR Calculator!")
+            print("\nLoan Calculator Menu:")
+            print("1. Calculate a new loan")
+            print("2. Display previous loan calculations")
+            print("3. Exit")
+
+            choice = input("Enter your choice (1/2/3): ")
+
+            if choice == "1":
+                principal = float(input("Enter the principal loan amount: RM"))
+                annual_interest_rate = float(input("Enter the annual interest rate: "))
+                loan_term = int(input("Enter the loan term in years: "))
+                monthly_income = float(input("Enter the applicant's monthly income: RM"))
+                monthly_commitments = []
+                num_commitments = int(input("Enter the number of other monthly financial commitments: "))
+                for i in range(num_commitments):
+                    commitment = float(input(f"Enter the amount of commitment {i + 1}: RM"))
+                    monthly_commitments.append(commitment)
+
+                self.display_loan_details(principal, annual_interest_rate, loan_term, monthly_income, monthly_commitments)
+
+            elif choice == "2":
+                self.display_previous_loans()
+            
+            elif choice == "3":   
+                print("Exiting the program. Goodbye! See you again.")
+                break
+
+            else:
+                print("Invalid choice. Please enter 1, 2, or 3.")
+
+
+calculator = LoanCalculator()
+calculator.run()
+
