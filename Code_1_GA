@@ -1,0 +1,56 @@
+Group Assignment 1
+Siti Nuranis Syafiqah Shamsuri 289895
+Lee Kai Jo 281756
+
+import os
+import platform
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+if platform.system() == 'Windows':
+        os.system('cls')
+else:
+        os.system('clear')
+
+        
+excel_file = r'C:\Users\anis\OneDrive\Desktop\Group_Asg_1\1.13_Data_Latest.xlsx'
+
+# Read extracted table from xlsx file
+data = pd.read_excel(excel_file, sheet_name="Total_Loan_Approved")
+df = pd.DataFrame(data)
+print(df.columns)
+
+# Convert 'Period' to string and concatenate with 'Quarter'
+df['YearMonth'] = df['Year'].astype(str) + ' ' + df['Month'].astype(int).astype(str)
+
+# Plotting the GDP growth rate over time
+plt.figure(figsize=(16, 6))
+plt.plot(df['YearMonth'], df['Total Loan/Financing Approved'], marker='o', linestyle='-', label='Total Loan/Financing Approved by Sectors', color='#FFE900')
+
+plt.axhline(y=0, color='red', linestyle='--',)
+# Loop through the data points and plot, marking negative values in red
+for i, value in enumerate(df['Total Loan/Financing Approved']):
+    if value < 0:
+        plt.plot(df['YearMonth'][i], value, marker='o', linestyle='-', color='red')
+    else:
+        plt.plot(df['YearMonth'][i], value, marker='o', linestyle='-', color='blue')
+
+# Adjust the data labels
+    plt.annotate(f'{value:.2f}', (df['YearMonth'][i], value),
+                 textcoords="offset points", xytext=(1, 5 if value > 0 else -15), ha='center')
+
+
+
+# Customize the plot
+plt.title('Banking System:Loan/Financing Approved by Sectors')
+plt.xlabel('Month and Year')
+plt.ylabel('Total Loan/Financing Approved by Sector')
+plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+plt.grid(True)
+
+plt.legend(loc='center left', bbox_to_anchor=(1.05, 0.5))
+
+# Display the plot
+plt.tight_layout()
+plt.show()
