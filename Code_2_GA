@@ -1,0 +1,69 @@
+Group Assignment 1
+Siti Nuranis Syafiqah Shamsuri 289895 
+Lee Kai Jo 281756
+
+import os
+import platform
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+if platform.system() == 'Windows':
+        os.system('cls')
+else:
+        os.system('clear')
+
+        
+excel_file = r'C:\Users\anis\OneDrive\Desktop\Business Analytics Prog\Group_Asg1\1.13_Latest.xlsx'
+
+# Read extracted table from xlsx file
+data = pd.read_excel(excel_file, sheet_name="Data_Total_All_Sectors")
+df = pd.DataFrame(data)
+print(df.columns)
+
+# Convert 'Period' to string and concatenate with 'Quarter'
+df['YearMonth'] = df['Year'].astype(str) + ' ' + df['Month'].astype(int).astype(str)
+
+# Plotting the GDP growth rate over time
+plt.figure(figsize=(16, 6))
+plt.plot(df['YearMonth'], df['Agriculture, Forestry and Fishing'], marker='o', linestyle='-', label='Agriculture, Forestry and Fishing')
+plt.plot(df['YearMonth'], df['Mining and Quarrying'], marker='o', linestyle='-', label='Mining and Quarrying')
+plt.plot(df['YearMonth'], df['Manufacturing'], marker='o', linestyle='-', label='Manufacturing')
+plt.plot(df['YearMonth'], df['Electricity, Gas, Steam and Air Conditioning Supply'], marker='o', linestyle='-', label='Electricity, Gas, Steam and Air Conditioning Supply')
+plt.plot(df['YearMonth'], df['Water Supply, Sewerage, Waste Management and Remediation Activities'], marker='o', linestyle='-', label='Water Supply, Sewerage, Waste Management and Remediation Activities')
+plt.plot(df['YearMonth'], df['Construction'], marker='o', linestyle='-', label='Construction')
+plt.plot(df['YearMonth'], df['Total'], marker='o', linestyle='-', label='Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles')
+plt.plot(df['YearMonth'], df['Accommodation and Food Service Activities'], marker='o', linestyle='-', label='Accommodation and Food Service Activities')
+plt.plot(df['YearMonth'], df['Transportation and Storage'], marker='o', linestyle='-', label='Transportation and Storage')
+plt.plot(df['YearMonth'], df['Information and Communication'], marker='o', linestyle='-', label='Information and Communication')
+plt.plot(df['YearMonth'], df['Jumlah'], marker='o', linestyle='-', label='Finance, Insurance, Real Estate and Business Activities', color='#375D76')
+plt.plot(df['YearMonth'], df['Education, Health and Others'], marker='o', linestyle='-', label='Education, Health and Others', color='#F6BDD9')
+plt.plot(df['YearMonth'], df['Household Sector'], marker='o', linestyle='-', label='Household Sector', color='#347A22')
+plt.plot(df['YearMonth'], df['Other Sector'], marker='o', linestyle='-', label='Other Sector', color='#FFE900')
+
+plt.axhline(y=0, color='red', linestyle='--',)
+# Loop through the data points and plot, marking negative values in red
+for i, value in enumerate(df['Agriculture, Forestry and Fishing']):
+    if value < 0:
+        plt.plot(df['YearMonth'][i], value, marker='o', linestyle='-', color='red')
+    else:
+        plt.plot(df['YearMonth'][i], value, marker='o', linestyle='-', color='blue')
+
+# Adjust the data labels
+    plt.annotate(f'{value:.2f}', (df['YearMonth'][i], value),
+                 textcoords="offset points", xytext=(1, 5 if value > 0 else -15), ha='center')
+
+
+
+# Customize the plot
+plt.title('Banking System:Loan/Financing Approved by Sectors')
+plt.xlabel('Month and Year')
+plt.ylabel('Total')
+plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+plt.grid(True)
+
+plt.legend(loc='center left', bbox_to_anchor=(1.05, 0.5))
+
+# Display the plot
+plt.tight_layout()
+plt.show()
